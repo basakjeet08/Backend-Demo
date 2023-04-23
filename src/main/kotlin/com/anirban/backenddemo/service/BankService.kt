@@ -13,8 +13,13 @@ import org.springframework.stereotype.Service
 @Service
 class BankService(private val bankDataSource: BankDataSource) {
 
-    // This function gets the Bank Data from the repository and returns it to the Person Asking for the Data
+    // This function gets the Bank Data from the repository and returns it to the Client
     fun getBanks(): List<BankData> {
         return bankDataSource.retrieveData()
+    }
+
+    // This function gets the Bank Data which has the same account Number from the repository and returns it to the Client
+    fun getIndividualBank(accountNumber: String): BankData {
+        return bankDataSource.retrieveIndividualBank(accountNumber = accountNumber)
     }
 }

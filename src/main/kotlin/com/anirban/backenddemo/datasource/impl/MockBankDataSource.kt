@@ -19,4 +19,11 @@ class MockBankDataSource : BankDataSource {
     override fun retrieveData(): List<BankData> {
         return FakeBankData.bankData
     }
+
+    // This function returns the Bank Data having the accountNumber given Collected from the Source
+    override fun retrieveIndividualBank(accountNumber: String): BankData {
+        return FakeBankData.bankData.find {
+            it.accountNumber == accountNumber
+        } ?: throw NoSuchElementException("Account Number : $accountNumber Not Found")
+    }
 }
