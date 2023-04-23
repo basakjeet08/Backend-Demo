@@ -1,5 +1,7 @@
 package com.anirban.backenddemo.controller
 
+import com.anirban.backenddemo.model.BankData
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -10,15 +12,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class BankControllerTest {
-
-    // This is a mock MVC which helps us to send http requests to the controller to test the controllers
-    @Autowired
-    lateinit var mockMvc: MockMvc
-
+class BankControllerTest @Autowired constructor(
+    val mockMvc: MockMvc,
+    val objectMapper: ObjectMapper
+) {
 
     /**
      * This inner class handles the test cases of all the instances when all the Banks data are asked
@@ -119,6 +120,98 @@ class BankControllerTest {
                 .andExpect {
                     status {
                         isNotFound()
+                    }
+                }
+        }
+    }
+
+    /**
+     * This class checks the post Bank Request Test Cases
+     */
+    @Nested
+    @DisplayName("Post Bank Request")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class PostBankData {
+
+        // Base URL of the Individual Bank Endpoint
+        private val baseUrl = "/api/banks"
+
+
+        /**
+         * This test checks if ---
+         *
+         *      1. The Controller is taking the endpoint correctly
+         *      2. The JSON Format Data is correct or not
+         */
+        @Test
+        fun `should add a new Bank Account to the Database`() {
+
+            // given
+            val bankData = BankData(
+                accountNumber = "21051885",
+                trust = 43.09,
+                transactionFee = 2
+            )
+
+            // when
+            val performAction = mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(bankData)
+            }
+
+            // then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isCreated()
+                    }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON)
+                    }
+                    jsonPath("$.accountNumber") {
+                        value("21051885")
+                    }
+                    jsonPath("$.trust") {
+                        value(43.09)
+                    }
+                    jsonPath("$.transactionFee") {
+                        value(2)
+                    }
+                }
+        }
+
+        /**
+         * This function tests if ---
+         *
+         *      1. The Controller is returning a BAD REQUEST when someone tries to add a Bank Data which is already present
+         */
+        @Test
+        fun `should return a BAD REQUEST if the bank Data is already present in the database`() {
+
+            // given
+            val bankData = BankData(
+                accountNumber = "21051880",
+                trust = 86.8,
+                transactionFee = 2000
+            )
+
+            // when
+            val performAction = mockMvc.post(baseUrl) {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(bankData)
+            }
+
+            // then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isBadRequest()
                     }
                 }
         }

@@ -1,5 +1,7 @@
 package com.anirban.backenddemo.datasource.impl
 
+import com.anirban.backenddemo.exceptions.BadRequestException
+import com.anirban.backenddemo.model.BankData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -99,5 +101,65 @@ class MocBankDataSourceTest {
                 it.accountNumber.isNotEmpty()
             }
         }
+    }
+
+    /**
+     * This class checks the adding of new bank data to the database
+     */
+    @Nested
+    @DisplayName("Data Source Add Bank")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class DataSourceAddBank {
+
+        /**
+         * This function checks if ---
+         *
+         *      1. The data is being added
+         *      2. The function is returning the same Bank Data given to it
+         */
+        @Test
+        fun `should add the new bank Data to the database and returns the Bank Data`() {
+
+            // given
+            val bankData = BankData(
+                accountNumber = "hjh",
+                trust = 43.09,
+                transactionFee = 2
+            )
+
+            // when
+            val bank = mockBankDataSource.addBankData(bankData)
+
+            // then
+            assertThat(bank == bankData)
+        }
+    }
+
+    /**
+     * This function checks if ---
+     *
+     *      1. The function is throwing a BadRequestException when we are trying to enter a bank details which is already present
+     */
+    @Test
+    fun `should throw an error when adding already present Bank Data`() {
+
+        // Given
+        val bankData = BankData(
+            accountNumber = "21051880",
+            trust = 86.8,
+            transactionFee = 2000
+        )
+
+        var isExceptionFound = false
+
+        // When
+        try {
+            mockBankDataSource.addBankData(bankData)
+        } catch (e: BadRequestException) {
+            isExceptionFound = true
+        }
+
+        // Then
+        assertThat(isExceptionFound)
     }
 }

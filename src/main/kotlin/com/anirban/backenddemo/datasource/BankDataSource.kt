@@ -9,4 +9,7 @@ interface BankDataSource {
 
     // Function which returns the bank Data which has the given accountNumber
     fun retrieveIndividualBank(accountNumber: String): BankData
+
+    // This function adds a Bank Data to the Database
+    fun addBankData(bankData: BankData): BankData
 }

@@ -1,6 +1,7 @@
 package com.anirban.backenddemo.datasource.impl
 
 import com.anirban.backenddemo.datasource.BankDataSource
+import com.anirban.backenddemo.exceptions.BadRequestException
 import com.anirban.backenddemo.model.BankData
 import org.springframework.stereotype.Repository
 
@@ -25,5 +26,21 @@ class MockBankDataSource : BankDataSource {
         return FakeBankData.bankData.find {
             it.accountNumber == accountNumber
         } ?: throw NoSuchElementException("Account Number : $accountNumber Not Found")
+    }
+
+    // This function adds the new bank data to the database
+    override fun addBankData(bankData: BankData): BankData {
+
+        // Checking if the bank Data is already present in the Database if so then we return Bad Request as response
+        if (FakeBankData.bankData.any {
+                it.accountNumber == bankData.accountNumber
+            }) {
+            throw BadRequestException("Bank Details already Present")
+        }
+
+        // Adding the Data to the database
+        FakeBankData.bankData.add(bankData)
+
+        return bankData
     }
 }

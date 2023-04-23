@@ -60,4 +60,31 @@ class BankServiceTest {
             bankDataSource.retrieveIndividualBank("21051880")
         }
     }
+
+    /**
+     * This Test checks if ---
+     *
+     *      1. The Service is calling the add bank data source function to add the Data
+     */
+    @Test
+    fun `should call the function to add new Bank Data`() {
+
+        // bank variable for the test
+        val bankData = BankData(
+            accountNumber = "21051885",
+            trust = 43.09,
+            transactionFee = 2
+        )
+
+        // Given
+        every { bankDataSource.addBankData(bankData) } returns bankData
+
+        // when
+        bankService.addBank(bankData)
+
+        // then
+        verify(exactly = 1) {
+            bankDataSource.addBankData(bankData)
+        }
+    }
 }

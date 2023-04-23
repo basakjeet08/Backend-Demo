@@ -22,4 +22,9 @@ class BankService(private val bankDataSource: BankDataSource) {
     fun getIndividualBank(accountNumber: String): BankData {
         return bankDataSource.retrieveIndividualBank(accountNumber = accountNumber)
     }
+
+    // This function asks the Data Source to post this new Bank Data to the Database
+    fun addBank(bankData: BankData): BankData {
+        return bankDataSource.addBankData(bankData)
+    }
 }

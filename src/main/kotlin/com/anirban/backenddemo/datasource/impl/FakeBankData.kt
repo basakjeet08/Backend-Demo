@@ -8,7 +8,7 @@ import com.anirban.backenddemo.model.BankData
 object FakeBankData {
 
     // Test Bank Data List for referring
-    val bankData = listOf(
+    val bankData = mutableListOf(
         BankData(
             accountNumber = "21051880",
             trust = 86.8,
