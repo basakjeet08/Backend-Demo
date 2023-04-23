@@ -12,4 +12,7 @@ interface BankDataSource {
 
     // This function adds a Bank Data to the Database
     fun addBankData(bankData: BankData): BankData
+
+    // This function updates a Bank Data in the database
+    fun updateBankData(bankData: BankData): BankData
 }

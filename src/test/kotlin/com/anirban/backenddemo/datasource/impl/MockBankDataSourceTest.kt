@@ -162,4 +162,61 @@ class MocBankDataSourceTest {
         // Then
         assertThat(isExceptionFound)
     }
+
+    /**
+     * This class checks all the Data Source Test Cases for updating a Data in the Database
+     */
+    @Nested
+    @DisplayName("Update/Patch Bank Data")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class UpdateBankData {
+
+        /**
+         * This function checks if ---
+         *
+         *      1. The Function is returning the updated bank Data
+         */
+        @Test
+        fun `should Return the updated Bank Data`() {
+
+            // Given
+            val bankData = BankData(
+                accountNumber = "21051880",
+                trust = 92.34,
+                transactionFee = 123
+            )
+
+            // When
+            val bank = mockBankDataSource.updateBankData(bankData)
+
+            assertThat(bank == bankData)
+        }
+
+        /**
+         * This function is testing if ---
+         *
+         *      1. The function is throwing BadRequestException when the data given is not even present in the Database
+         */
+        @Test
+        fun `should throw BAD REQUEST EXCEPTION when the Bank Data is not Present in the database`() {
+
+            // Given
+            val bankData = BankData(
+                accountNumber = "saffron",
+                trust = 92.34,
+                transactionFee = 123
+            )
+
+            var isBadRequest = false
+
+            // When
+            try {
+                mockBankDataSource.updateBankData(bankData)
+            } catch (e: BadRequestException) {
+                isBadRequest = true
+            }
+
+            assertThat(isBadRequest)
+        }
+    }
 }

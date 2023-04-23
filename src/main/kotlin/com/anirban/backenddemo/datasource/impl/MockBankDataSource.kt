@@ -43,4 +43,22 @@ class MockBankDataSource : BankDataSource {
 
         return bankData
     }
+
+    // This function updates an existing Bank Data into the database
+    override fun updateBankData(bankData: BankData): BankData {
+
+        var isBankDataUpdated = false
+
+        FakeBankData.bankData.forEachIndexed { index, data ->
+            if (data.accountNumber == bankData.accountNumber) {
+                FakeBankData.bankData[index] = bankData
+                isBankDataUpdated = true
+            }
+        }
+
+        if (!isBankDataUpdated)
+            throw BadRequestException("Account Number : ${bankData.accountNumber} is not Present")
+
+        return bankData
+    }
 }

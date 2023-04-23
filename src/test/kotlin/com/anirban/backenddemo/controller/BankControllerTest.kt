@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -203,6 +201,113 @@ class BankControllerTest @Autowired constructor(
                 contentType = MediaType.APPLICATION_JSON
                 content = objectMapper.writeValueAsString(bankData)
             }
+
+            // then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isBadRequest()
+                    }
+                }
+        }
+    }
+
+    /**
+     * This class checks test cases for the Update Bank Data Functions
+     */
+    @Nested
+    @DisplayName("Update Bank Request")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class UpdateBankData {
+
+        private val baseUrl = "/api/banks"
+
+        /**
+         * This function checks if ---
+         *
+         *      1. Endpoint is Working Properly
+         *      2. JSON FORMAT Data is correct or not
+         */
+        @Test
+        fun `should update an already existing Bank Data`() {
+
+            // Given
+            val bankData = BankData(
+                accountNumber = "21051880",
+                trust = 21.8,
+                transactionFee = 43
+            )
+
+            // When
+            val performAction = mockMvc.patch("$baseUrl/update") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(bankData)
+            }
+
+            // Then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isOk()
+                    }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON)
+                    }
+
+                }
+
+            // Checking if the data is updated in the database by calling for a get request in the database
+            mockMvc
+                .get("$baseUrl/21051880")
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isOk()
+                    }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON)
+                        jsonPath("$.accountNumber") {
+                            value("21051880")
+                        }
+                        jsonPath("$.trust") {
+                            value(21.8)
+                        }
+                        jsonPath("$.transactionFee") {
+                            value(43)
+                        }
+                    }
+                }
+        }
+
+        /**
+         * This function checks if ---
+         *
+         *      1. The Rest API is responding a BAD REQUEST when we enter a data that doesn't exist
+         */
+        @Test
+        fun `should respond a BAD REQUEST when the Bank Data Given is Not Present in the Database`() {
+
+            // Given
+            val bankData = BankData(
+                accountNumber = "does not exists",
+                trust = 21.8,
+                transactionFee = 43
+            )
+
+            // When
+            val performAction = mockMvc
+                .patch("$baseUrl/update") {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = objectMapper.writeValueAsString(bankData)
+                }
 
             // then
             performAction

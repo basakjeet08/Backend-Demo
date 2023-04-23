@@ -69,6 +69,7 @@ class BankServiceTest {
     @Test
     fun `should call the function to add new Bank Data`() {
 
+        // Given
         // bank variable for the test
         val bankData = BankData(
             accountNumber = "21051885",
@@ -76,7 +77,6 @@ class BankServiceTest {
             transactionFee = 2
         )
 
-        // Given
         every { bankDataSource.addBankData(bankData) } returns bankData
 
         // when
@@ -85,6 +85,32 @@ class BankServiceTest {
         // then
         verify(exactly = 1) {
             bankDataSource.addBankData(bankData)
+        }
+    }
+
+    /**
+     * This function checks if ---
+     *
+     *      1. The Function is calling the Data Source function
+     */
+    @Test
+    fun `should call data source Function`() {
+
+        // Given
+        val bankData = BankData(
+            accountNumber = "21051880",
+            trust = 43.09,
+            transactionFee = 2
+        )
+
+        every { bankDataSource.updateBankData(bankData) } returns bankData
+
+        // when
+        bankService.updateData(bankData)
+
+        // Then
+        verify(exactly = 1) {
+            bankDataSource.updateBankData(bankData)
         }
     }
 }

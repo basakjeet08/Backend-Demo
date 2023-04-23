@@ -75,4 +75,17 @@ class BankController(private val bankService: BankService) {
     fun postBank(@RequestBody bankData: BankData): BankData {
         return bankService.addBank(bankData)
     }
+
+    /**
+     * This function Updates a previously present bank Data in the database
+     *
+     * To Update the Bank Data into the Database use this endpoint
+     *
+     *      api/banks/update
+     *      with a post Body of Bank Data type where the account Number of the Bank Data will be the same as in the Database
+     */
+    @PatchMapping("/banks/update")
+    fun updateBankData(@RequestBody bankData: BankData): BankData {
+        return bankService.updateData(bankData)
+    }
 }
