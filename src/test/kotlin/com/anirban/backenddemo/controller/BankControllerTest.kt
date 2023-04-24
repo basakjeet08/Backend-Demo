@@ -321,4 +321,84 @@ class BankControllerTest @Autowired constructor(
                 }
         }
     }
+
+    /**
+     * This class tests the controller when the delete endpoints of Bank Data are being Used
+     */
+    @Nested
+    @DisplayName("Delete bank request")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class DeleteBankData {
+
+        // base Url
+        private val baseUrl = "/api/banks"
+
+        /**
+         * This function checks if ---
+         *
+         *      1. If the delete Endpoint is working
+         *      2. It is returning the expected status
+         */
+        @Test
+        fun `should delete an Already present Bank Data in the Database`() {
+
+            // Given
+            val accountNumber = "21051880"
+
+            // When
+            val performAction = mockMvc
+                .delete("$baseUrl/$accountNumber")
+
+            // Then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isNoContent()
+                    }
+                }
+
+            mockMvc
+                .get("$baseUrl/$accountNumber")
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isNotFound()
+                    }
+                }
+
+        }
+
+        /**
+         * This function tests if ---
+         *
+         *      1. The BAD REQUEST EXCEPTION is getting handled or not
+         */
+        @Test
+        fun `should return a NOT FOUND response when the account Number is not present in the database`() {
+
+            // Given
+            val accountNumber = "does_not_exists"
+
+            // When
+            val performAction = mockMvc
+                .delete("$baseUrl/$accountNumber")
+
+            // Then
+            performAction
+                .andDo {
+                    print()
+                }
+                .andExpect {
+                    status {
+                        isNotFound()
+                    }
+                }
+        }
+    }
+
 }

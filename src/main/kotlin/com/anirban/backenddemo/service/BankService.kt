@@ -32,4 +32,9 @@ class BankService(private val bankDataSource: BankDataSource) {
     fun updateData(bankData: BankData): BankData {
         return bankDataSource.updateBankData(bankData)
     }
+
+    // This function deletes pre-existing bank Data from the Database
+    fun deleteBankData(accountNumber: String) {
+        return bankDataSource.deleteBankData(accountNumber)
+    }
 }

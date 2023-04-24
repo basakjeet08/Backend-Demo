@@ -88,4 +88,18 @@ class BankController(private val bankService: BankService) {
     fun updateBankData(@RequestBody bankData: BankData): BankData {
         return bankService.updateData(bankData)
     }
+
+    /**
+     * This function Deletes the Bank Data Passed to it in the Database
+     *
+     * To Delete the Bank Data into the Database use this endpoint
+     *
+     *      api/banks/<accountNumber>
+     *      With Account Number which needs to be deleted as a Path Variable
+     */
+    @DeleteMapping("/banks/{accountNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBankData(@PathVariable accountNumber: String) {
+        bankService.deleteBankData(accountNumber)
+    }
 }

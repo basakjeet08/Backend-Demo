@@ -61,4 +61,14 @@ class MockBankDataSource : BankDataSource {
 
         return bankData
     }
+
+    // This function deletes a pre-existing bank Data otherwise throws a BadRequestException
+    override fun deleteBankData(accountNumber: String) {
+
+        val currentBank = FakeBankData.bankData.firstOrNull {
+            it.accountNumber == accountNumber
+        } ?: throw NoSuchElementException("Account Number : $accountNumber is not present")
+
+        FakeBankData.bankData.remove(currentBank)
+    }
 }

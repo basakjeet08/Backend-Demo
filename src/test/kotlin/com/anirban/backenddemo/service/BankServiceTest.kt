@@ -113,4 +113,26 @@ class BankServiceTest {
             bankDataSource.updateBankData(bankData)
         }
     }
+
+    /**
+     * This function tests if ---
+     *
+     *      1. The data source function is getting called or not
+     */
+    @Test
+    fun `should call the data source delete Function`() {
+
+        val accountNumber = "21051880"
+
+        // Given
+        every { bankDataSource.deleteBankData(accountNumber) } returns Unit
+
+        // When
+        bankService.deleteBankData(accountNumber)
+
+        // Then
+        verify(exactly = 1) {
+            bankDataSource.deleteBankData(accountNumber)
+        }
+    }
 }

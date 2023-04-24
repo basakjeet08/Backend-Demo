@@ -15,4 +15,7 @@ interface BankDataSource {
 
     // This function updates a Bank Data in the database
     fun updateBankData(bankData: BankData): BankData
+
+    // This function deletes the bank Data in the database
+    fun deleteBankData(accountNumber: String)
 }

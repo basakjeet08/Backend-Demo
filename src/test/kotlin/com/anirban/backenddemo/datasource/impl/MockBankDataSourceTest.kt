@@ -2,6 +2,7 @@ package com.anirban.backenddemo.datasource.impl
 
 import com.anirban.backenddemo.exceptions.BadRequestException
 import com.anirban.backenddemo.model.BankData
+import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -217,6 +218,61 @@ class MocBankDataSourceTest {
             }
 
             assertThat(isBadRequest)
+        }
+    }
+
+    /**
+     * This class tests all the Cases that may arrive while deleting a Bank Data
+     */
+    @Nested
+    @DisplayName("Delete Bank Data Source")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class DeleteDataSource {
+
+        /**
+         * This class tests if ---
+         *
+         *      1. If the Function is throwing a BAD REQUEST when the account Number doesn't
+         *      exist
+         */
+        @Test
+        fun `should throw a NULL POINTER EXCEPTION when the data is not there in the database`() {
+
+            // Given
+            val accountNumber = "does not exists"
+            var isBadRequest = false
+
+            // When
+            try {
+                mockBankDataSource.deleteBankData(accountNumber)
+            } catch (e: NoSuchElementException) {
+                isBadRequest = true
+            }
+
+            assertThat(isBadRequest)
+        }
+
+        /**
+         * This function is testing if ---
+         *
+         *      1. The function is deleting the data from the Database
+         */
+        @Test
+        fun `should delete an already present bank Data from the Database`() {
+
+            // Given
+            val accountNumber = "21051880"
+            var isNotBadRequest = true
+
+            // When
+            try {
+                mockBankDataSource.deleteBankData(accountNumber)
+            } catch (e: BadRequestException) {
+                isNotBadRequest = false
+            }
+
+            // Then
+            assertThat(isNotBadRequest)
         }
     }
 }
