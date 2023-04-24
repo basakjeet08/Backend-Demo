@@ -2,7 +2,6 @@ package com.anirban.backenddemo.datasource.impl
 
 import com.anirban.backenddemo.exceptions.BadRequestException
 import com.anirban.backenddemo.model.BankData
-import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -199,7 +198,7 @@ class MocBankDataSourceTest {
          *      1. The function is throwing BadRequestException when the data given is not even present in the Database
          */
         @Test
-        fun `should throw BAD REQUEST EXCEPTION when the Bank Data is not Present in the database`() {
+        fun `should throw NO SUCH ELEMENT FOUND EXCEPTION when the Bank Data is not Present in the database`() {
 
             // Given
             val bankData = BankData(
@@ -213,7 +212,7 @@ class MocBankDataSourceTest {
             // When
             try {
                 mockBankDataSource.updateBankData(bankData)
-            } catch (e: BadRequestException) {
+            } catch (e: NoSuchElementException) {
                 isBadRequest = true
             }
 
@@ -236,7 +235,7 @@ class MocBankDataSourceTest {
          *      exist
          */
         @Test
-        fun `should throw a NULL POINTER EXCEPTION when the data is not there in the database`() {
+        fun `should throw a NO SUCH ELEMENT FOUND EXCEPTION when the data is not there in the database`() {
 
             // Given
             val accountNumber = "does not exists"

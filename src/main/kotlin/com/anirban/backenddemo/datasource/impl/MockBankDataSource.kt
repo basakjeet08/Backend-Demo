@@ -57,7 +57,7 @@ class MockBankDataSource : BankDataSource {
         }
 
         if (!isBankDataUpdated)
-            throw BadRequestException("Account Number : ${bankData.accountNumber} is not Present")
+            throw NoSuchElementException("Account Number : ${bankData.accountNumber} is not Present")
 
         return bankData
     }

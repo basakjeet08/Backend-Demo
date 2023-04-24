@@ -293,7 +293,7 @@ class BankControllerTest @Autowired constructor(
          *      1. The Rest API is responding a BAD REQUEST when we enter a data that doesn't exist
          */
         @Test
-        fun `should respond a BAD REQUEST when the Bank Data Given is Not Present in the Database`() {
+        fun `should respond a NO SUCH ELEMENT FOUND when the Bank Data Given is Not Present in the Database`() {
 
             // Given
             val bankData = BankData(
@@ -316,7 +316,7 @@ class BankControllerTest @Autowired constructor(
                 }
                 .andExpect {
                     status {
-                        isBadRequest()
+                        isNotFound()
                     }
                 }
         }
